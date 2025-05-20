@@ -12,6 +12,12 @@ This repository contains the code implement of the paper Echo: Enabling Sustaine
 - Echo integrates a pretrained small model with a frozen LLM using a learnable **fusion network**, which dynamically balances the contributions of the two models at the token level. This design allows Echo to personalize predictions efficiently, even under evolving LLM environments.
 - Echo introduces a **token-level replay mechanism** to adapt the fusion network when the LLM is updated, **without re-accessing full user data or retraining the SLM itself**. The framework only retains a small number of informative tokens for replay, making it highly suitable for resource-constrained edge devices like mobile phones.
 
+## Requirements
+
+```shell
+pip install -r requirements.txt
+```
+
 ## Experiment
 
 You need to first download the [LaMP](https://github.com/LaMP-Benchmark/LaMP) benchmark data into the directory `data/`.In this experiment we randomly select users with more than 150 interaction records to simulate a realistic setting201
