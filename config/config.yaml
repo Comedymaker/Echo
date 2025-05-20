@@ -1,0 +1,45 @@
+base:
+  # tiny_model_id: "TinyLlama/TinyLlama-1.1B-Chat-v1.0"
+  # large_model_id: "meta-llama/Llama-2-7b-chat-hf"
+  tiny_model_id: "Qwen/Qwen1.5-0.5B-Chat"
+  large_model_id: "Qwen/Qwen1.5-7B-Chat"
+  lamp5_path: "data/Lamp5/example.json"
+  lamp4_path: "data/Lamp4/example.json"
+  lamp3_path: "data/Lamp3/example.json"
+  ##Lamp5
+  model_path: "path/to/tiny_model"
+  large_model_path: "path/to/large_model"
+
+  fusion_network_path: "path/to/fusion_network"
+  device_id: "0"
+  max_length: 35
+  top_k: 50
+  temperature: 0.1
+  
+# 训练配置
+tinyModel_training:
+  train_type: "large"
+  output_dir: "/results/models"
+  batch_size: 4
+  gradient_accumulation_steps: 4
+  learning_rate: 0.0002
+  num_epochs: 1
+  max_steps: 5
+  save_total_limit: 1  
+
+  fp16: true
+  
+# LoRA配置
+lora:
+  r: 24
+  alpha: 48
+  dropout: 0.1
+  target_modules: ["q_proj", "v_proj", "k_proj", "o_proj", "gate_proj", "up_proj"]
+
+combModel_training:
+  batch_size: 4
+  # lr: 0.0002
+  lr: 0.0002
+  output_dir: "/results/models/combModel"
+  max_length: 512
+  num_epochs: 10

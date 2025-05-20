@@ -1,0 +1,12 @@
+bitsandbytes==0.45.3
+datasets==3.3.2
+nltk==3.9.1
+numpy==2.2.4
+packaging==24.2
+pandas==2.2.3
+peft==0.14.0
+PyYAML==6.0.2
+PyYAML==6.0.2
+rouge_score==0.1.2
+transformers==4.49.0
+trl==0.12.0
