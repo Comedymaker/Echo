@@ -1,4 +1,4 @@
-from train.tinyModel_trainer import FineTuner
+from train.Model_trainer import FineTuner
 import random
 import numpy as np
 import torch

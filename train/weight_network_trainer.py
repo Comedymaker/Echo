@@ -41,6 +41,8 @@ class WeightNetworkTrainer:
         
         if(self.config["base"]["tiny_model_id"] == "Qwen/Qwen1.5-0.5B-Chat"):
             ctx_dim = 1024
+        elif(self.config["base"]["tiny_model_id"] == "Qwen/Qwen2.5-0.5B-Instruct"):
+            ctx_dim = 896
         else:
             ctx_dim = 2048
 
@@ -259,7 +261,7 @@ class WeightNetworkTrainer:
             print(f"Epoch {epoch} saved in {self.path}/checkpoint_epoch{epoch}.pt")
         
 
-        replay_path = f"../autodl-tmp/replay_data/{datetime.now().strftime('%Y%m%d%H%M%S')}"
+        replay_path = f"replay_data/{datetime.now().strftime('%Y%m%d%H%M%S')}"
         os.makedirs(replay_path, exist_ok=True)
         self.collaborative_inference.replay_buffer.save(f"{replay_path}/replay.pt")
         print(f"Replay data saved to {replay_path}/replay.pt")

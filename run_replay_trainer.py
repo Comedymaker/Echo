@@ -15,6 +15,6 @@ def set_random_seed(seed_num):
 if __name__ == "__main__":
     set_random_seed(1057)
     replay_buffer = ReplayBuffer()
-    replay_buffer.load(path="../autodl-tmp/replay_data/20250514101800/replay.pt", ratio=1)  # Load your replay buffer here
+    replay_buffer.load(path="replay_data/20250928084233_0.7/replay.pt", ratio=1)  # Load your replay buffer here
     replay_trainer = CombinerReplayTrainer()
     replay_trainer.refit(replay_buffer, num_epochs=15, batch_size=1)

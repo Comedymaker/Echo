@@ -55,6 +55,9 @@ class DataCollatorForCompletionLM(DataCollatorForLanguageModeling):
         batch = super().torch_call(examples)
 
         labels = batch["labels"].clone()
+
+        # print(labels[0].tolist())
+
         begin_token_ids = self.tokenizer.encode(BEGIN_KEY)
         config = load_config()
         if(config["base"]["tiny_model_id"] == "TinyLlama/TinyLlama-1.1B-Chat-v1.0"):
@@ -134,7 +137,7 @@ class FineTuner:
             args=self._get_training_args(),
             tokenizer=self.tokenizer,
             data_collator=self.data_collator,
-            # max_seq_length=512,
+            max_seq_length=512,
         )
         trainer.train()
         trainer.evaluate()
@@ -153,18 +156,20 @@ class FineTuner:
         )
 
     def _save_model(self, trainer):
+        del trainer.model
+        torch.cuda.empty_cache()  
         if(self.config["tinyModel_training"]["train_type"] == "tiny"):
             base_model = AutoModelForCausalLM.from_pretrained(
                 self.config['base']['tiny_model_id'],
                 load_in_8bit=False,
-                device_map="cuda",
+                device_map="cpu",
                 torch_dtype=torch.float16
             )
         else:
             base_model = AutoModelForCausalLM.from_pretrained(
                 self.config['base']['large_model_id'],
                 load_in_8bit=False,
-                device_map="cuda",
+                device_map="cpu",
                 torch_dtype=torch.float16
             )
         base_model.resize_token_embeddings(len(self.tokenizer))

@@ -108,7 +108,7 @@ class CombinerReplayTrainer:
                 weights_slm = 1 - weights
                 combined_logits = (weights_llm * llm_last_token) + (weights_slm * slm_last_token)
 
-                print(f"Combined logits shape: {combined_logits.shape}")
+                # print(f"Combined logits shape: {combined_logits.shape}")
 
                 loss = F.cross_entropy(combined_logits, labels)
                 self.optimizer.zero_grad()

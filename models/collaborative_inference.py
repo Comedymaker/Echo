@@ -127,17 +127,45 @@ class CollaborativeInference:
             if labels is not None:
                 next_token = labels[:, step] 
 
+                # if self.replay_buffer is not None:
+                #     for b in range(batch_size):
+                #         label_token = labels[b, step].item()
+                #         if label_token in self.invalid_token_ids:
+                #             continue 
+                #         sample = {
+                #             "input_ids": current_ids[b].detach().cpu(),    
+                #             "attention_mask": current_mask[b].detach().cpu(),
+                #             "label_token_id": labels[b, step].item()
+                #         }
+                #         balancing_weight = self.config["replay"]["balancing_weight"]
+                #         score = abs(entropy_l[b] - entropy_s[b]).item()
+                #         self.replay_buffer.add(sample, score)
                 if self.replay_buffer is not None:
+                    alpha = float(self.config["replay"].get("balancing_weight", 0.5))
+
+                    # 取出需要的三列：熵_s、熵_l、JS
+                    entropy_s = conf_feat[:, 0]           # [B]
+                    entropy_l = conf_feat[:, 1]           # [B]
+                    js        = conf_feat[:, 4]           # [B]
+
+                    # 计算每个样本的争议度得分（向量化）
+                    score_vec = alpha * (entropy_s - entropy_l).abs() + (1.0 - alpha) * js
+                    score_vec = torch.nan_to_num(score_vec, nan=0.0)  # 避免极端数值
+
                     for b in range(batch_size):
                         label_token = labels[b, step].item()
                         if label_token in self.invalid_token_ids:
-                            continue 
+                            continue
+
                         sample = {
-                            "input_ids": current_ids[b].detach().cpu(),    
+                            "input_ids":      current_ids[b].detach().cpu(),
                             "attention_mask": current_mask[b].detach().cpu(),
-                            "label_token_id": labels[b, step].item()
+                            "label_token_id": label_token,
                         }
-                        score = abs(entropy_l[b] - entropy_s[b]).item()
+
+                        # 使用新的分数
+                        score = float(score_vec[b].detach().cpu())
+                        print(f"Score for sample in batch {b}, step {step}: {score:.4f}")
                         self.replay_buffer.add(sample, score)
                         
 
